@@ -58,3 +58,5 @@ The certification is overseen by an independent, non-profit organization with a 
 
 [For detailed information on how the Celestia Space Certification process works, visit the full documentation here](Celestia%20Certification%20A%20Global%20Standard%20for%20Sustainable%20Space%20Operations.pdf)
 
+[See the Metrics file for details on how the project’s metrics, weights, and values were defined.](Appendix%20B%20-%20Metrics.pdf)
+
