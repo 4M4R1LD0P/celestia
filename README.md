@@ -5,14 +5,12 @@ A sustainable and Cooperative Future in Low Earth Orbit
 The data provided by NASA was fundamental to the development of this project in two distinct ways:
 
 Direct Integration via Smart Search: The primary use is the real-time access and presentation of documents from the NASA Technical Reports Server (NTRS) API. Our site acts as an intelligent front-end, making NASA's vast repository of scientific and technical reports immediately accessible and searchable using AI.
-
-Foundational Knowledge and Context: The comprehensive structure, terminology, and content within NASA's open-source databases and reports served as the knowledge base for crafting the System Instruction for the Gemini API. This ensured the AI's translation output was always technically accurate and highly optimized for the NTRS API's specific search requirements.
-
-Documentation Links for Usage:
-
 [How the NTRS API was integrated](Smart%20Search%20for%20NASA%20-%20Technical%20Reports.pdf)
 
+
+Foundational Knowledge and Context: The reports, technical papers, and open datasets provided by NASA served as the foundation for developing the Celestia Space Certification project. These materials offered essential insights into aerospace standards, mission documentation practices, and data validation methodologies, ensuring that Celestia’s framework was aligned with real-world space industry requirements and consistent with NASA’s rigorous approach to research and certification.
 [This document includes all NASA files and references used as the basis for the project.](Appendix%20A%20—%20Regulatory%20&%20Technical%20References.pdf)
+
 # RESUME
 Celestia Certification
 Celestia Certification is a global standard for assessing and certifying the sustainability of space operations. It uses a Celestia Space Sustainability Score (CSSS), a quantitative system that ranks organizations based on their responsible orbital practices and sustainable design. This is done by evaluating their performance across five categories: Disposal, Design, Operations, Transparency, and Governance. The certification's goal is to address the growing problems of orbital congestion and space debris by providing a measurable framework for responsible conduct in space.
