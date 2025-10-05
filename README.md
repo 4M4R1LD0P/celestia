@@ -12,7 +12,7 @@ Documentation Links for Usage:
 
 [How the NTRS API was integrated](Smart%20Search%20for%20NASA%20-%20Technical%20Reports.pdf)
 
-[Link to Document 2: Details on System Instruction and Query Optimization]
+[This document includes all NASA files and references used as the basis for the project.](Appendix%20A%20—%20Regulatory%20&%20Technical%20References.pdf)
 # RESUME
 Celestia Certification
 Celestia Certification is a global standard for assessing and certifying the sustainability of space operations. It uses a Celestia Space Sustainability Score (CSSS), a quantitative system that ranks organizations based on their responsible orbital practices and sustainable design. This is done by evaluating their performance across five categories: Disposal, Design, Operations, Transparency, and Governance. The certification's goal is to address the growing problems of orbital congestion and space debris by providing a measurable framework for responsible conduct in space.
