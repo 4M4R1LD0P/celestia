@@ -10,7 +10,7 @@ Foundational Knowledge and Context: The comprehensive structure, terminology, an
 
 Documentation Links for Usage:
 
-How the NTRS API was integrated(Smart Search for NASA - Technical Reports.pdf)
+[How the NTRS API was integrated](Smart Search for NASA - Technical Reports.pdf)
 
 [Link to Document 2: Details on System Instruction and Query Optimization]
 # RESUME
