@@ -1,7 +1,6 @@
 # CELESTIA
 A sustainable and Cooperative Future in Low Earth Orbit
-
-# [Visit our project site: Celestia](https://www.celestialeoprotocol.earth/)
+[Visit our project site: Celestia](https://www.celestialeoprotocol.earth/)
 
 # How NASA Data Fueled Our Project
 The data provided by NASA was fundamental to the development of this project in two distinct ways:
