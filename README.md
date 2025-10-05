@@ -5,10 +5,12 @@ A sustainable and Cooperative Future in Low Earth Orbit
 The data provided by NASA was fundamental to the development of this project in two distinct ways:
 
 Direct Integration via Smart Search: The primary use is the real-time access and presentation of documents from the NASA Technical Reports Server (NTRS) API. Our site acts as an intelligent front-end, making NASA's vast repository of scientific and technical reports immediately accessible and searchable using AI.
+
 [How the NTRS API was integrated](Smart%20Search%20for%20NASA%20-%20Technical%20Reports.pdf)
 
 
 Foundational Knowledge and Context: The reports, technical papers, and open datasets provided by NASA served as the foundation for developing the Celestia Space Certification project. These materials offered essential insights into aerospace standards, mission documentation practices, and data validation methodologies, ensuring that Celestia’s framework was aligned with real-world space industry requirements and consistent with NASA’s rigorous approach to research and certification.
+
 [This document includes all NASA files and references used as the basis for the project.](Appendix%20A%20—%20Regulatory%20&%20Technical%20References.pdf)
 
 # RESUME
