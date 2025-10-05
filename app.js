@@ -1,165 +1,165 @@
-// --- CONFIGURAÇÃO (Substitua por suas chaves reais) ---
+// --- CONFIGURATION (Replace with your actual keys) ---
 const GEMINI_API_KEY = 'AIzaSyCcFi-vMO0kj0zrqPuogp86f09oQvu34Ao';
 const GEMINI_MODEL = 'gemini-2.5-flash';
 
-// --- CONFIGURAÇÃO DA API DA NASA ---
-// O endpoint para buscar citações na OpenAPI do NTRS
+// --- NASA API CONFIGURATION ---
+// The endpoint for fetching citations in the NTRS OpenAPI
 const NASA_NTRS_ENDPOINT = 'https://ntrs.nasa.gov/api/citations/search';
 
-// Função principal disparada pelo botão
+// Main function triggered by the button
 async function iniciarBusca() {
-    const userInput = document.getElementById('userInput').value.trim();
-    const statusElement = document.getElementById('status');
-    const resultsBody = document.getElementById('resultsBody');
-    
-    // Limpar resultados e status
-    resultsBody.innerHTML = '';
-    statusElement.textContent = 'Aguardando busca...';
+    const userInput = document.getElementById('userInput').value.trim();
+    const statusElement = document.getElementById('status');
+    const resultsBody = document.getElementById('resultsBody');
+    
+    // Clear results and status
+    resultsBody.innerHTML = '';
+    statusElement.textContent = 'Waiting for search...';
 
-    if (!userInput) {
-        statusElement.textContent = 'Por favor, digite um termo de busca.';
-        return;
-    }
+    if (!userInput) {
+        statusElement.textContent = 'Please enter a search term.';
+        return;
+    }
 
-    try {
-        // Passo 1: Traduzir a busca com o Gemini
-        statusElement.textContent = 'Passo 1/2: Usando IA para traduzir a sua busca ao formato NTRS...';
-        const queryEstruturada = await traduzirBusca(userInput);
-        
-        // Passo 2: Buscar dados na API da NASA
-        statusElement.textContent = `Passo 2/2: Buscando na NASA NTRS com  a query: "${queryEstruturada}"...`;
-        await buscarRelatoriosNASA(queryEstruturada);
+    try {
+        // Step 1: Translate the search with Gemini
+        statusElement.textContent = 'Step 1/2: Using AI to translate your search into the NTRS format...';
+        const queryEstruturada = await traduzirBusca(userInput);
+        
+        // Step 2: Search for data in the NASA API
+        statusElement.textContent = `Step 2/2: Searching NASA NTRS with the query: "${queryEstruturada}"...`;
+        await buscarRelatoriosNASA(queryEstruturada);
 
-        statusElement.textContent = 'Busca concluída!';
-    } catch (error) {
-        console.error('Erro na busca principal:', error);
-        statusElement.innerHTML = `<span class="error">Erro: ${error.message}</span>. Verifique a console para detalhes.`;
-    }
+        statusElement.textContent = 'Search completed!';
+    } catch (error) {
+        console.error('Error in main search:', error);
+        statusElement.innerHTML = `<span class="error">Error: ${error.message}</span>. Check the console for details.`;
+    }
 }
 
 /**
- * Chama o Gemini para converter o texto em linguagem natural para uma query otimizada em inglês.
- * @param {string} textoBusca - A entrada de texto do usuário (ex: "documentos referentes a missão a lua").
- * @returns {Promise<string>} A query estruturada para o NTRS (ex: "lunar mission" OR "apollo program").
- */
+ * Calls Gemini to convert natural language text into an optimized English query.
+ * @param {string} textoBusca - The user's text input (e.g., "documentos referentes a missão a lua").
+ * @returns {Promise<string>} The structured query for NTRS (e.g., "lunar mission" OR "apollo program").
+ */
 async function traduzirBusca(textoBusca) {
-    const prompt = `Você é um tradutor de linguagem natural para a API de Busca do NTRS (NASA Technical Reports Server). Sua única tarefa é analisar a solicitação de busca do usuário e transformá-la em uma query de busca otimizada para o campo 'q' do NTRS.
+    const prompt = `You are a natural language translator for the NTRS (NASA Technical Reports Server) Search API. Your only task is to analyze the user's search request and transform it into an optimized search query for the NTRS 'q' field.
 
-REGRAS:
-1.  Formato de Saída: Retorne SOMENTE a string de busca, sem qualquer explicação, introdução ou texto adicional.
-2.  Otimização: Use operadores booleanos (AND, OR, NOT) e aspas duplas (") para frases exatas, quando apropriado, para refinar a busca.
-3.  Idioma: A query de busca DEVE estar em **inglês**, pois os documentos e metadados do NTRS estão predominantemente em inglês.
+RULES:
+1. Output Format: Return ONLY the search string, without any explanation, introduction, or additional text.
+2. Optimization: Use boolean operators (AND, OR, NOT) and double quotes (") for exact phrases, when appropriate, to refine the search.
+3. Language: The search query MUST be in **English**, as NTRS documents and metadata are predominantly in English.
 
-A solicitação do usuário é: ${textoBusca}`;
+The user's request is: ${textoBusca}`;
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
-    
-    try {
-        const response = await axios.post(url, {
-            contents: [{ role: "user", parts: [{ text: prompt }] }]
-        });
-        
-        // Extrai a string de busca (o texto gerado pelo Gemini)
-        return response.data.candidates[0].content.parts[0].text.trim();
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;
+    
+    try {
+        const response = await axios.post(url, {
+            contents: [{ role: "user", parts: [{ text: prompt }] }]
+        });
+        
+        // Extract the search string (the text generated by Gemini)
+        return response.data.candidates[0].content.parts[0].text.trim();
 
-    } catch (error) {
-        console.error("Erro ao chamar a API Gemini:", error);
-        throw new Error("Falha ao traduzir a busca. Verifique sua chave API Gemini e a console.");
-    }
+    } catch (error) {
+        console.error("Error calling the Gemini API:", error);
+        throw new Error("Failed to translate the search. Check your Gemini API key and the console.");
+    }
 }
 
-// O PROXY PÚBLICO para contornar o CORS.
-// ATENÇÃO: Use com cautela e por sua conta e risco, pois é um serviço de terceiros.
+// THE PUBLIC PROXY to bypass CORS.
+// ATTENTION: Use with caution and at your own risk, as it is a third-party service.
 const CORS_PROXY = 'https://api.allorigins.win/get?url='; 
 
 
 /**
- * Busca relatórios USANDO UM PROXY CORS PÚBLICO para contornar o bloqueio do navegador.
- * @param {string} queryEstruturada - A query gerada pelo Gemini.
- */
+ * Searches for reports USING A PUBLIC CORS PROXY to bypass browser blocking.
+ * @param {string} queryEstruturada - The query generated by Gemini.
+ */
 async function buscarRelatoriosNASA(queryEstruturada) {
-    // 1. Constrói a URL final da NASA NTRS
-    const nasaUrlFinal = `${NASA_NTRS_ENDPOINT}?q=${queryEstruturada}&limit=50`;
+    // 1. Build the final NASA NTRS URL
+    const nasaUrlFinal = `${NASA_NTRS_ENDPOINT}?q=${queryEstruturada}&limit=50`;
 
-    console.log ("Log ->" + nasaUrlFinal);
-    // 2. CODIFICA A URL DA NASA INTEIRA e prefixa com o proxy.
-    // O proxy espera que a URL de destino esteja como parâmetro e codificada.
-    const urlBuscaComProxy = CORS_PROXY + encodeURIComponent(nasaUrlFinal);
+    console.log ("Log ->" + nasaUrlFinal);
+    // 2. ENCODE THE ENTIRE NASA URL and prefix it with the proxy.
+    // The proxy expects the target URL as a parameter and encoded.
+    const urlBuscaComProxy = CORS_PROXY + encodeURIComponent(nasaUrlFinal);
 
-    try {
-        const response = await axios.get(urlBuscaComProxy);
-        
-        // 1. EXTRAI A STRING JSON DA NASA DO JSON DO PROXY
-        const nasaJsonString = response.data.contents; 
-        
-        if (!nasaJsonString) {
-            // Se o proxy retornar algo, mas sem o campo 'contents', é um erro de proxy.
-             throw new Error("O proxy não retornou o conteúdo esperado da NASA.");
-        }
+    try {
+        const response = await axios.get(urlBuscaComProxy);
+        
+        // 1. EXTRACT THE NASA JSON STRING FROM THE PROXY'S JSON
+        const nasaJsonString = response.data.contents; 
+        
+        if (!nasaJsonString) {
+            // If the proxy returns something, but without the 'contents' field, it's a proxy error.
+             throw new Error("The proxy did not return the expected NASA content.");
+        }
 
-        // 2. CONVERTE A STRING JSON DA NASA PARA UM OBJETO JAVASCRIPT
-        const nasaResponse = JSON.parse(nasaJsonString); 
+        // 2. CONVERT THE NASA JSON STRING TO A JAVASCRIPT OBJECT
+        const nasaResponse = JSON.parse(nasaJsonString); 
 
-        // 3. ACESSA O CAMPO 'results' DO OBJETO REAL DA NASA
-        // Usamos a sintaxe OR para garantir que, se 'results' não existir, 'data' seja um array vazio []
-        const data = nasaResponse.results || []; 
-        
-        // **VERIFICAMOS O ARRAY**
-        if (data.length === 0) {
-            // NOTA: Para ter certeza, você pode checar se nasaResponse.stats.total é > 0
-            document.getElementById('resultsBody').innerHTML = '<tr><td colspan="4">Nenhum documento encontrado (total: 0).</td></tr>';
-            return;
-        }
-        
-        // DEBUG: Se você quiser ver os dados que estão sendo passados:
-        console.log("Resultados da NASA para exibição:", data);
+        // 3. ACCESS THE 'results' FIELD OF THE REAL NASA OBJECT
+        // We use the OR syntax to ensure that if 'results' doesn't exist, 'data' is an empty array []
+        const data = nasaResponse.results || []; 
+        
+        // **CHECK THE ARRAY**
+        if (data.length === 0) {
+            // NOTE: To be sure, you can check if nasaResponse.stats.total is > 0
+            document.getElementById('resultsBody').innerHTML = '<tr><td colspan="4">No documents found (total: 0).</td></tr>';
+            return;
+        }
+        
+        // DEBUG: If you want to see the data being passed:
+        console.log("NASA results for display:", data);
 
-        renderizarResultados(data); // Chama sua função de exibição
-    } catch (error) {
-        console.error("Erro ao buscar na API da NASA via Proxy:", error.response ? error.response.data : error.message);
-        throw new Error("Falha na busca. O Proxy CORS pode estar offline ou a NASA bloqueou a requisição do Proxy.");
-    }
+        renderizarResultados(data); // Calls your display function
+    } catch (error) {
+        console.error("Error searching the NASA API via Proxy:", error.response ? error.response.data : error.message);
+        throw new Error("Search failed. The CORS Proxy might be offline or NASA blocked the Proxy request.");
+    }
 }
 
 /**
- * Cria as linhas da tabela com os dados do NTRS.
- * @param {Array<Object>} documentos - Array de objetos de documento retornados pela NASA.
- */
+ * Creates the table rows with NTRS data.
+ * @param {Array<Object>} documentos - Array of document objects returned by NASA.
+ */
 function renderizarResultados(documentos) {
-    const resultsBody = document.getElementById('resultsBody');
-    resultsBody.innerHTML = ''; // Limpa resultados anteriores
+    const resultsBody = document.getElementById('resultsBody');
+    resultsBody.innerHTML = ''; // Clear previous results
 
-    documentos.forEach(doc => {
-        
-        // --- EXTRAÇÃO DE DADOS CORRIGIDA ---
-        
-        // 1. Prioriza o distributionDate (mais comum e preciso)
-        const rawDate = doc.distributionDate 
-                        // 2. Fallback para submittedDate (quando o documento foi enviado)
-                        ?? doc.submittedDate 
-                        // 3. Fallback para a data de criação do registro
-                        ?? doc.created; 
-        
-        // Se alguma data foi encontrada, extrai apenas a parte YYYY-MM-DD
-        const data = rawDate ? rawDate.substring(0, 10) : 'N/A';
+    documentos.forEach(doc => {
+        
+        // --- CORRECTED DATA EXTRACTION ---
+        
+        // 1. Prioritize distributionDate (more common and accurate)
+        const rawDate = doc.distributionDate 
+                        // 2. Fallback to submittedDate (when the document was submitted)
+                        ?? doc.submittedDate 
+                        // 3. Fallback to the record creation date
+                        ?? doc.created; 
+        
+        // If any date was found, extract only the YYYY-MM-DD part
+        const data = rawDate ? rawDate.substring(0, 10) : 'N/A';
 
 
-        // Extrai Título, Resumo e Link (mantidos do código anterior)
-        const titulo = doc.title ?? 'N/A';
-        const resumo = doc.abstract 
-            ?? (doc.description ? doc.description.substring(0, 150) + '...' : 'Sem resumo.');
-        
-        const pdfLinkPart = doc.downloads?.[0]?.links?.pdf 
-                         ?? doc.downloads?.[0]?.links?.original;
-        const linkCompleto = pdfLinkPart 
-            ? `https://ntrs.nasa.gov${pdfLinkPart}` 
-            : `https://ntrs.nasa.gov/citations/${doc.id}`; 
-        
-        // --- INSERÇÃO NA TABELA ---
-        const row = resultsBody.insertRow();
-        row.insertCell().innerHTML = titulo;
-        row.insertCell().textContent = data; // AGORA DEVE MOSTRAR A DATA CORRETA
-        row.insertCell().textContent = resumo;
-        row.insertCell().innerHTML = `<a href="${linkCompleto}" target="_blank">Ver Documento</a>`;
-    });
+        // Extract Title, Abstract, and Link (kept from the previous code)
+        const titulo = doc.title ?? 'N/A';
+        const resumo = doc.abstract 
+            ?? (doc.description ? doc.description.substring(0, 150) + '...' : 'No abstract.');
+        
+        const pdfLinkPart = doc.downloads?.[0]?.links?.pdf 
+                         ?? doc.downloads?.[0]?.links?.original;
+        const linkCompleto = pdfLinkPart 
+            ? `https://ntrs.nasa.gov${pdfLinkPart}` 
+            : `https://ntrs.nasa.gov/citations/${doc.id}`; 
+        
+        // --- INSERTION INTO THE TABLE ---
+        const row = resultsBody.insertRow();
+        row.insertCell().innerHTML = titulo;
+        row.insertCell().textContent = data; // NOW IT SHOULD SHOW THE CORRECT DATE
+        row.insertCell().textContent = resumo;
+        row.insertCell().innerHTML = `<a href="${linkCompleto}" target="_blank">View Document</a>`;
+    });
 }
