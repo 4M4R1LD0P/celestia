@@ -1,5 +1,6 @@
 # CELESTIA
 A sustainable and Cooperative Future in Low Earth Orbit
+
 [Visit our project site: Celestia](https://www.celestialeoprotocol.earth/)
 
 # How NASA Data Fueled Our Project
@@ -54,3 +55,6 @@ For Emerging Nations: The certification creates a mechanism for these nations to
 For the Global Community: By consolidating various international guidelines and standards (such as the Artemis Accords and the UNOOSA Outer Space Treaty) into a single framework, Celestia fosters a safer and more transparent orbital ecosystem for everyone.
 
 The certification is overseen by an independent, non-profit organization with a public, blockchain-based register to ensure integrity.
+
+[For detailed information on how the Celestia Space Certification process works, visit the full documentation here](Celestia%20Certification%20A%20Global%20Standard%20for%20Sustainable%20Space%20Operations.pdf)
+
