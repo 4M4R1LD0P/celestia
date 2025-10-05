@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Busca de Relatórios NASA</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        #resultsTable { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        #resultsTable th, #resultsTable td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        #resultsTable th { background-color: #f2f2f2; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Busca Inteligente em Relatórios NASA (NTRS)</h1>
+    <p>Digite o que você procura em linguagem natural (ex: "satélites que observam o clima da terra").</p>
+
+    <input type="text" id="userInput" placeholder="Digite sua busca aqui..." style="width: 80%; padding: 10px;">
+    <button onclick="iniciarBusca()">Buscar Documentos</button>
+
+    <p id="status" style="margin-top: 10px;">Aguardando busca...</p>
+
+    <table id="resultsTable">
+        <thead>
+            <tr>
+                <th>Título do Documento</th>
+                <th>Data de Publicação</th>
+                <th>Resumo (Snippet)</th>
+                <th>Link</th>
+            </tr>
+        </thead>
+        <tbody id="resultsBody">
+            </tbody>
+    </table>
+
+    <script src="app.js"></script>
+</body>
+</html>
