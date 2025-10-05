@@ -1,7 +1,7 @@
 # CELESTIA
 A sustainable and Cooperative Future in Low Earth Orbit
 
-#🛰️ How NASA Data Fueled Our Project
+# How NASA Data Fueled Our Project
 The data provided by NASA was fundamental to the development of this project in two distinct ways:
 
 Direct Integration via Smart Search: The primary use is the real-time access and presentation of documents from the NASA Technical Reports Server (NTRS) API. Our site acts as an intelligent front-end, making NASA's vast repository of scientific and technical reports immediately accessible and searchable using AI.
