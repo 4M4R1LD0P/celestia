@@ -1,42 +1,259 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Busca de Relatórios NASA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NASA Reports Search</title>
+    <!-- Inclui a biblioteca Axios para chamadas HTTP -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Inclui o Font Awesome para o ícone do foguete -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; 
-                background-color: #f0f0f0;
-             }
-        #resultsTable { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        #resultsTable th, #resultsTable td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        #resultsTable th { background-color: #f2f2f2; }
-        .error { color: red; }
+        /* 1. ESTILOS GERAIS E LAYOUT */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+            background-color: #f4f7fa; /* Fundo cinza claro */
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        #appContainer {
+            width: 100%;
+            max-width: 1200px; /* Limite de largura para desktop */
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            /* AZUL MARINHO APLICADO AQUI */
+            color: #003366; 
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+            font-size: 24px;
+        }
+
+        /* 2. BARRA DE BUSCA (FLEXBOX) */
+        #searchContainer {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap; /* Permite quebrar linha em telas pequenas */
+        }
+
+        #userInput {
+            /* Input Harmonizado */
+            flex-grow: 1; /* Ocupa o máximo de espaço possível */
+            padding: 12px 15px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            min-width: 200px; /* Garante que não fique muito estreito */
+        }
+
+        #userInput:focus {
+            /* AZUL MARINHO APLICADO AQUI */
+            border-color: #003366; 
+            outline: none;
+            /* Sombra em tom de azul marinho */
+            box-shadow: 0 0 8px rgba(0, 51, 102, 0.5); 
+        }
+        
+        /* Botão Foguete (Estilo Mantido e Aprimorado) */
+        #rocketButton {
+            /* AZUL MARINHO APLICADO AQUI */
+            background-color: #003366;
+            color: white;
+            padding: 12px 20px; /* Ajustado para altura do input */
+            border: none;
+            border-radius: 8px; /* Cantos arredondados */
+            font-size: 16px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            white-space: nowrap; /* Evita quebra de linha no botão */
+        }
+
+        #rocketButton:hover {
+            /* AZUL MARINHO MAIS ESCURO PARA HOVER */
+            background-color: #002244;
+            transform: translateY(-1px); /* Pequeno efeito de elevação */
+        }
+        
+        #rocketButton:active {
+            transform: translateY(1px); /* Pequeno efeito de clique */
+        }
+
+        /* 3. MENSAGENS E STATUS */
+        #status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            /* Cor de fundo neutra para o estado inicial */
+            background-color: #e9ecef;
+            color: #555;
+            /* O display: none foi removido daqui para que o status inicial seja visível */
+        }
+        .loading {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        /* 4. TABELA DE RESULTADOS */
+        #resultsTable {
+            width: 100%;
+            border-collapse: separate; /* Permite o border-radius na tabela */
+            border-spacing: 0;
+            margin-top: 25px;
+            font-size: 14px;
+            overflow: hidden; /* Importante para o border-radius */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        #resultsTable thead {
+            /* AZUL MARINHO APLICADO AQUI */
+            background-color: #003366; 
+            color: white;
+        }
+
+        #resultsTable th, #resultsTable td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee; /* Linha divisória suave */
+        }
+
+        #resultsTable th:first-child { border-top-left-radius: 8px; }
+        #resultsTable th:last-child { border-top-right-radius: 8px; }
+
+        /* Estilo Zebrado (Zebra Stripping) */
+        #resultsTable tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        #resultsTable tbody tr:hover {
+            background-color: #e9ecef; /* Destaca a linha ao passar o mouse */
+            cursor: default;
+        }
+        
+        /* Links na tabela */
+        #resultsTable a {
+            /* AZUL MARINHO APLICADO AQUI */
+            color: #003366;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        #resultsTable a:hover {
+            text-decoration: underline;
+        }
+
+        /* 5. RESPONSIVIDADE (Telas Pequenas) */
+        @media (max-width: 768px) {
+            #appContainer {
+                padding: 15px;
+            }
+            h1 {
+                font-size: 20px;
+                text-align: center;
+            }
+            #searchContainer {
+                flex-direction: column; /* Input e botão em colunas separadas */
+            }
+            #userInput {
+                width: 100%; /* Input ocupa largura total */
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            #rocketButton {
+                width: 100%; /* Botão ocupa largura total */
+                justify-content: center; /* Centraliza o ícone/texto */
+            }
+
+            /* Quebra a Tabela em telas pequenas (difícil de ler) */
+            #resultsTable thead {
+                display: none; /* Esconde o cabeçalho original */
+            }
+            #resultsTable, #resultsTable tbody, #resultsTable tr, #resultsTable td {
+                display: block;
+                width: 100%;
+            }
+            #resultsTable tr {
+                margin-bottom: 15px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+                padding: 10px;
+            }
+            #resultsTable td {
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+                border: none;
+            }
+            /* Usa o atributo 'data-label' (que o JS teria que adicionar) para mostrar o título da coluna */
+            #resultsTable td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                width: 45%;
+                padding-left: 10px;
+                font-weight: bold;
+                text-align: left;
+                color: #555;
+            }
+        }
     </style>
 </head>
 <body>
-    <h1>Busca Inteligente em Relatórios NASA (NTRS)</h1>
-    <p>Digite o que você procura em linguagem natural (ex: "satélites que observam o clima da terra").</p>
+    <div id="appContainer">
+        <h1>Smart Search in NASA Technical Reports (NTRS)</h1>
+        <p>Use Gemini AI to translate your natural language search (e.g., "satellites observing Earth's climate") into technical NASA terms.</p>
 
-    <input type="text" id="userInput" placeholder="Digite sua busca aqui..." style="width: 80%; padding: 10px;">
-    <button onclick="iniciarBusca()">Buscar Documentos</button>
+        <div id="searchContainer">
+            <!-- O INPUT agora está sem estilo inline e usa o CSS #userInput -->
+            <input type="text" id="userInput" placeholder="Enter your search query here..." required>
 
-    <p id="status" style="margin-top: 10px;">Aguardando busca...</p>
+            <button id="rocketButton" onclick="iniciarBusca()">
+                <i class="fas fa-rocket"></i> Start Search
+            </button>
+        </div>
 
-    <table id="resultsTable">
-        <thead>
-            <tr>
-                <th>Título do Documento</th>
-                <th>Data de Publicação</th>
-                <th>Resumo (Snippet)</th>
-                <th>Link</th>
-            </tr>
-        </thead>
-        <tbody id="resultsBody">
-            </tbody>
-    </table>
+        <!-- O status aparecerá aqui. Texto inicial adicionado. -->
+        <p id="status">Ready to start the search.</p>
 
+        <h2>Search Results</h2>
+        
+        <div style="overflow-x: auto;">
+            <table id="resultsTable">
+                <thead>
+                    <tr>
+                        <th>Document Title</th>
+                        <th>Publication Date</th>
+                        <th>Abstract (Snippet)</th>
+                        <th>Link</th>
+                    </tr>
+                </thead>
+                <tbody id="resultsBody">
+                    <!-- Resultados serão injetados aqui pelo JavaScript -->
+                    <tr><td colspan="4" style="text-align: center;">No results found. Start your search!</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- O app.js deve conter a lógica iniciarBusca(), renderizarResultados() e a chave Gemini -->
     <script src="app.js"></script>
 </body>
-
 </html>
