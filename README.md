@@ -15,7 +15,7 @@ Foundational Knowledge and Context: The reports, technical papers, and open data
 
 [This document includes all NASA files and references used as the basis for the project.](Appendix%20A%20—%20Regulatory%20&%20Technical%20References.pdf)
 
-# RESUME
+# Summary
 Celestia Certification
 Celestia Certification is a global standard for assessing and certifying the sustainability of space operations. It uses a Celestia Space Sustainability Score (CSSS), a quantitative system that ranks organizations based on their responsible orbital practices and sustainable design. This is done by evaluating their performance across five categories: Disposal, Design, Operations, Transparency, and Governance. The certification's goal is to address the growing problems of orbital congestion and space debris by providing a measurable framework for responsible conduct in space.
 
